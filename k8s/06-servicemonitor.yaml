@@ -1,0 +1,22 @@
+# ServiceMonitor tells Prometheus (installed via kube-prometheus-stack) to
+# scrape this app's /actuator/prometheus endpoint automatically.
+#
+# NOTE: deployed in the "monitoring" namespace because this cluster's
+# Prometheus Operator watches ServiceMonitors labeled release=monitoring.
+# The "selector" below still targets the Service by its labels regardless
+# of which namespace the Service itself lives in.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: task-manager-api-monitor
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: task-manager-api
+  endpoints:
+    - port: http
+      path: /actuator/prometheus
+      interval: 15s
