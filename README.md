@@ -124,3 +124,6 @@ task-manager-api/
 - Add pagination and filtering to `GET /api/tasks`
 - Wire up CI/CD (GitHub Actions → ECR → EKS)
 - Instrument with Prometheus + Grafana (see companion monitoring project)
+
+# task-manager-api
+Spring Boot REST API for task management — containerized with Docker, deployed to Amazon EKS.
