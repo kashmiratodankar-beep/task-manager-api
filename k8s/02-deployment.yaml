@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-manager-api
+  namespace: task-api
+  labels:
+    app: task-manager-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: task-manager-api
+  template:
+    metadata:
+      labels:
+        app: task-manager-api
+    spec:
+      containers:
+        - name: task-manager-api
+          image: <YOUR_ECR_REPO_URI>:latest   # e.g. 716171483260.dkr.ecr.ap-southeast-2.amazonaws.com/task-manager-api:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: task-db-secret
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 15
